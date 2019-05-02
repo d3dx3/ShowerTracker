@@ -25,32 +25,41 @@ public class GraphActivity extends AppCompatActivity {
         Log.d("graph activity", "I AM HERE IN THE GRAPH");
         GraphView graph = (GraphView) findViewById(R.id.graph);
 
+
         //TODO Get data from DB
-        BarGraphSeries<DataPoint> series = ((GlobalApplication)this.getApplication()).getSeries();
-        graph.addSeries(series);
+        try
+        {
+            BarGraphSeries<DataPoint> series = ((GlobalApplication)this.getApplication()).getSeries();
 
-        //FORMATTING
-        series.setTitle("ShowerTracker");
-        series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-            @Override
-            public int get(DataPoint data) {
-                return Color.rgb((int) data.getX()*255/4, (int) Math.abs(data.getY()*255/6), 100);
-            }
-        });
-        series.setSpacing(50);
-        series.setDrawValuesOnTop(true);
-        series.setValuesOnTopColor(Color.RED);
+            //FORMATTING
+            series.setTitle("ShowerTracker");
 
-        graph.getGridLabelRenderer ().setHorizontalAxisTitle ("date");
-        graph.getGridLabelRenderer ().setVerticalAxisTitle ("Time");
+            series.setDrawValuesOnTop(true);
+            series.setValuesOnTopColor(Color.RED);
 
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(graph.getContext()));
-        graph.getViewport ().setScalable (true);
-        graph.getViewport().setMinX(series.getLowestValueX());
-        graph.getViewport().setMaxX(series.getHighestValueX());
-        graph.getViewport().setXAxisBoundsManual(true);
+            graph.getGridLabelRenderer ().setHorizontalAxisTitle ("date");
+            graph.getGridLabelRenderer ().setVerticalAxisTitle ("Time");
 
-        graph.getGridLabelRenderer().setHumanRounding(false);
+            series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+                @Override
+                public int get(DataPoint data) {
+                    return Color.rgb((int) data.getX()*255/4, (int) Math.abs(data.getY()*255/6), 100);
+                }
+            });
+
+            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(graph.getContext()));
+            graph.getViewport().setMinY(0);
+            graph.getViewport().setMaxY(900);
+            series.setSpacing(50);
+            graph.getViewport().setYAxisBoundsManual(true);
+            graph.getGridLabelRenderer().setHumanRounding(false);
+            graph.addSeries(series);
+        }
+        catch (Exception e)
+        {
+            //do nothing
+        }
+
     }
 
 }
