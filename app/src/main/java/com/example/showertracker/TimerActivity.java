@@ -6,6 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Chronometer;
 
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.util.Calendar;
+import java.util.Date;
+
 public class TimerActivity extends AppCompatActivity {
 
     Chronometer cTimer;
@@ -23,7 +30,18 @@ public class TimerActivity extends AppCompatActivity {
 
     public void stopTimer (View view) {
         cTimer.stop();
+
         //TODO save to DB
+        //TODO fix times
+
+        Date currentTime = Calendar.getInstance().getTime();
+        long time = (SystemClock.elapsedRealtime() - cTimer.getBase()) / 1000;
+
+        BarGraphSeries<DataPoint> newSeries = new BarGraphSeries<> (new DataPoint[]
+                {
+                        new DataPoint(currentTime, time)
+                });
+        ((GlobalApplication)this.getApplication()).setSeries(newSeries);
         cTimer.setBase(SystemClock.elapsedRealtime());
     }
 
